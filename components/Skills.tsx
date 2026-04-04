@@ -1,0 +1,168 @@
+"use client";
+
+import { motion } from "framer-motion";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiNestjs,
+  SiTypescript,
+  SiJavascript,
+  SiPostgresql,
+  SiMongodb,
+  SiRedis,
+  SiDocker,
+  SiGit,
+  SiExpress,
+  SiSocketdotio,
+  SiStripe,
+  SiRabbitmq,
+  SiHtml5,
+  SiSwagger,
+  SiOpenai,
+  SiGoogle,
+  SiSendgrid,
+  SiCplusplus,
+  SiNewrelic,
+} from "react-icons/si";
+import { TbBrandAws } from "react-icons/tb";
+
+const categories = [
+  {
+    title: "Languages & frameworks",
+    items: [
+      { name: "JavaScript", Icon: SiJavascript, color: "text-yellow-200/90" },
+      { name: "TypeScript", Icon: SiTypescript, color: "text-blue-400" },
+      { name: "Node.js", Icon: SiNodedotjs, color: "text-green-400" },
+      { name: "Express.js", Icon: SiExpress, color: "text-white/80" },
+      { name: "NestJS", Icon: SiNestjs, color: "text-red-400" },
+      { name: "C++", Icon: SiCplusplus, color: "text-cyan-300" },
+      { name: "HTML", Icon: SiHtml5, color: "text-orange-400" },
+      { name: "React", Icon: SiReact, color: "text-cyan-400" },
+      { name: "Next.js", Icon: SiNextdotjs, color: "text-white" },
+    ],
+  },
+  {
+    title: "Databases & ORMs",
+    items: [
+      { name: "PostgreSQL", Icon: SiPostgresql, color: "text-sky-400" },
+      { name: "MongoDB", Icon: SiMongodb, color: "text-green-500" },
+      { name: "Redis", Icon: SiRedis, color: "text-red-500" },
+      { name: "TypeORM", Icon: SiNestjs, color: "text-red-300" },
+      { name: "Sequelize", Icon: SiNodedotjs, color: "text-blue-300" },
+    ],
+  },
+  {
+    title: "API, architecture & messaging",
+    items: [
+      { name: "REST APIs", Icon: SiSwagger, color: "text-emerald-300" },
+      { name: "Microservices", Icon: SiDocker, color: "text-blue-200" },
+      { name: "RabbitMQ", Icon: SiRabbitmq, color: "text-orange-300" },
+      { name: "BullMQ", Icon: SiNodedotjs, color: "text-amber-200" },
+      { name: "Socket.IO", Icon: SiSocketdotio, color: "text-white" },
+    ],
+  },
+  {
+    title: "Auth, payments & integrations",
+    items: [
+      { name: "JWT / OAuth / RBAC", Icon: SiNestjs, color: "text-red-300" },
+      { name: "Stripe", Icon: SiStripe, color: "text-violet-300" },
+      { name: "Google APIs", Icon: SiGoogle, color: "text-white/70" },
+      { name: "SendGrid", Icon: SiSendgrid, color: "text-sky-300" },
+      { name: "OpenAI / MLS", Icon: SiOpenai, color: "text-teal-300" },
+    ],
+  },
+  {
+    title: "Tools & DevOps",
+    items: [
+      { name: "Git", Icon: SiGit, color: "text-orange-400" },
+      { name: "Docker", Icon: SiDocker, color: "text-blue-400" },
+      { name: "CI/CD & Jenkins", Icon: SiGit, color: "text-white/70" },
+      { name: "AWS", Icon: TbBrandAws, color: "text-amber-200" },
+      { name: "Swagger", Icon: SiSwagger, color: "text-lime-300" },
+      { name: "New Relic", Icon: SiNewrelic, color: "text-teal-200" },
+      { name: "Postman", Icon: SiSwagger, color: "text-orange-200" },
+    ],
+  },
+];
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 380, damping: 28 },
+  },
+};
+
+export function Skills() {
+  return (
+    <section
+      id="skills"
+      className="relative flex min-h-screen flex-col justify-center bg-[#121212] px-4 py-24 md:px-8"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.15),transparent)]" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="relative mx-auto w-full max-w-7xl"
+      >
+        <p className="text-sm font-medium uppercase tracking-[0.2em] text-white/40">
+          Stack
+        </p>
+        <h2 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+          Skills & tools
+        </h2>
+        <p className="mt-4 max-w-2xl text-lg text-white/50">
+          Backend engineering with Node.js, NestJS, and TypeScript — scalable APIs,
+          data layers, and cloud-ready delivery.
+        </p>
+
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+        >
+          {categories.map((cat) => (
+            <motion.div
+              key={cat.title}
+              variants={item}
+              className="glass glass-hover rounded-2xl p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
+            >
+              <h3 className="text-sm font-medium uppercase tracking-wider text-white/45">
+                {cat.title}
+              </h3>
+              <ul className="mt-5 flex flex-wrap gap-3">
+                {cat.items.map(({ name, Icon, color }) => (
+                  <li
+                    key={name}
+                    className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/80 shadow-[0_0_24px_-12px_rgba(255,255,255,0.2)] transition hover:border-white/20 hover:bg-white/[0.08]"
+                  >
+                    <Icon
+                      className={`h-4 w-4 shrink-0 opacity-90 transition group-hover:scale-110 ${color}`}
+                      aria-hidden
+                    />
+                    <span>{name}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
