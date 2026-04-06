@@ -7,7 +7,8 @@ export function Education() {
   return (
     <section
       id="education"
-      className="relative flex min-h-screen flex-col justify-center bg-[#121212] px-4 py-24 md:px-8"
+      data-snap-section="true"
+      className="snap-section relative flex h-full flex-col justify-center bg-[#121212] px-4 py-16 md:px-8"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_100%,rgba(34,197,94,0.06),transparent)]" />
 
