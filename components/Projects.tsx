@@ -61,7 +61,8 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="relative min-h-screen bg-[#121212] px-4 py-24 md:px-8"
+      data-snap-section="true"
+      className="snap-section relative h-full bg-[#121212] px-4 py-16 md:px-8"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_0%_100%,rgba(168,85,247,0.08),transparent)]" />
 

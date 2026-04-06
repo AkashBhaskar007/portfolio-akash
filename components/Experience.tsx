@@ -37,7 +37,8 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="relative flex min-h-screen flex-col justify-center bg-[#121212] px-4 py-24 md:px-8"
+      data-snap-section="true"
+      className="snap-section relative flex h-full flex-col justify-center bg-[#121212] px-4 py-16 md:px-8"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_100%_0%,rgba(59,130,246,0.08),transparent)]" />
 
@@ -77,7 +78,7 @@ export function Experience() {
                   <Briefcase className="h-3 w-3 text-white/70 md:h-3.5 md:w-3.5" />
                 </span>
 
-                <article className="glass glass-hover rounded-2xl p-6 md:p-8">
+                <article className="group glass glass-hover rounded-2xl p-6 md:p-8">
                   <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                     <div>
                       <h3 className="text-xl font-semibold text-white md:text-2xl">
@@ -90,7 +91,7 @@ export function Experience() {
                       </p>
                     </div>
                   </div>
-                  <ul className="mt-6 space-y-3 text-sm leading-relaxed text-white/55 md:text-base">
+                  <ul className="mt-0 max-h-0 space-y-3 overflow-hidden text-sm leading-relaxed text-white/55 opacity-0 transition-all duration-300 ease-out group-hover:mt-6 group-hover:max-h-[340px] group-hover:opacity-100 md:text-base">
                     {job.highlights.map((line) => (
                       <li key={line} className="flex gap-2">
                         <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-white/35" />

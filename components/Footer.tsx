@@ -16,7 +16,8 @@ export function Footer() {
   return (
     <footer
       id="contact"
-      className="border-t border-white/10 bg-[#121212] px-4 py-16 md:px-8"
+      data-snap-section="true"
+      className="snap-section border-t border-white/10 bg-[#121212] px-4 py-16 md:px-8"
     >
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 md:flex-row">
         <div className="text-center md:text-left">

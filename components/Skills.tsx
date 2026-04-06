@@ -107,7 +107,8 @@ export function Skills() {
   return (
     <section
       id="skills"
-      className="relative flex min-h-screen flex-col justify-center bg-[#121212] px-4 py-24 md:px-8"
+      data-snap-section="true"
+      className="snap-section relative flex h-full flex-col justify-center bg-[#121212] px-4 py-16 md:px-8"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.15),transparent)]" />
 
