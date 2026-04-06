@@ -11,6 +11,7 @@ import {
 
 type ScrollyCanvasProps = {
   scrollTargetRef: RefObject<HTMLElement | null>;
+  onReady?: () => void;
 };
 
 function drawImageCover(
@@ -27,7 +28,7 @@ function drawImageCover(
   ctx.drawImage(img, ox, oy, dw, dh);
 }
 
-export function ScrollyCanvas({ scrollTargetRef }: ScrollyCanvasProps) {
+export function ScrollyCanvas({ scrollTargetRef, onReady }: ScrollyCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
@@ -88,6 +89,7 @@ export function ScrollyCanvas({ scrollTargetRef }: ScrollyCanvasProps) {
         if (cancelled) return;
         imagesRef.current = imgs;
         setReady(true);
+        onReady?.();
         setLoadError(null);
         requestAnimationFrame(() => paint());
       })
@@ -98,7 +100,7 @@ export function ScrollyCanvas({ scrollTargetRef }: ScrollyCanvasProps) {
     return () => {
       cancelled = true;
     };
-  }, [paint]);
+  }, [paint, onReady]);
 
   useMotionValueEvent(frameMotion, "change", (latest) => {
     frameIndexRef.current = latest;

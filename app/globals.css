@@ -18,6 +18,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.preloader-avatar::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transform: translateX(-140%) rotate(8deg);
+  animation: preloader-shine 1.6s linear infinite;
+}
+
+@keyframes preloader-shine {
+  to {
+    transform: translateX(140%) rotate(8deg);
+  }
+}
+
 @layer utilities {
   .glass {
     @apply border border-white/10 bg-white/[0.03] backdrop-blur-xl;

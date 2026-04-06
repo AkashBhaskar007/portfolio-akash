@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const nav = [
   { href: "#home", label: "Home" },
@@ -35,9 +36,18 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:h-16 md:px-8">
         <Link
           href="#home"
-          className="text-sm font-medium tracking-tight text-white/90 transition hover:text-white"
+          className="group flex items-center gap-2 rounded-full text-sm font-medium tracking-tight text-white/90 transition hover:text-white"
         >
-          AB
+          <span className="relative h-9 w-9 overflow-hidden rounded-full border border-white/20 transition group-hover:border-white/35">
+            <Image
+              src="/akash-profile.png"
+              alt="Akash Bhaskar"
+              fill
+              sizes="36px"
+              className="object-cover"
+              priority
+            />
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
