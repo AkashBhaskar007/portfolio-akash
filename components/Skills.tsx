@@ -150,12 +150,8 @@ export function Skills() {
     const card = cardRefs.current[index];
     if (!card) return;
     const rect = card.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const popupWidth = Math.min(980, viewportWidth - 32);
-    const centeredLeft = (viewportWidth - popupWidth) / 2;
-    const centeredTop = Math.max(16, (window.innerHeight - rect.height * 1.15) / 2);
     setOriginRect(rect);
-    setTargetRect({ top: centeredTop, left: centeredLeft, width: popupWidth });
+    setTargetRect({ top: rect.top, left: rect.left, width: rect.width });
     setExpandedIndex(index);
   };
 
