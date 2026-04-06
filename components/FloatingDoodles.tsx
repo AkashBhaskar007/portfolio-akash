@@ -57,7 +57,7 @@ export function FloatingDoodles() {
   );
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[8] overflow-hidden">
+    <div className="pointer-events-none fixed inset-0 z-[8] hidden overflow-hidden sm:block">
       {doodles.map(({ Icon, size }, idx) => {
         const track = tracks[idx];
         const startX = track.fromLeft ? "-12vw" : "112vw";

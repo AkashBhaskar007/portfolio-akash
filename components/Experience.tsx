@@ -58,6 +58,7 @@ export function Experience() {
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
   const floatingCardRef = useRef<HTMLElement | null>(null);
   const hoverTimerRef = useRef<number | null>(null);
+  const [canHover, setCanHover] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [originRect, setOriginRect] = useState<DOMRect | null>(null);
   const [targetRect, setTargetRect] = useState<{
@@ -90,6 +91,7 @@ export function Experience() {
   };
 
   const handleCardEnter = (index: number) => {
+    if (!canHover) return;
     clearHoverTimer();
     hoverTimerRef.current = window.setTimeout(() => {
       openCard(index);
@@ -104,6 +106,14 @@ export function Experience() {
   };
 
   useEffect(() => clearHoverTimer, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setCanHover(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     if (expandedIndex === null) return;
@@ -187,14 +197,14 @@ export function Experience() {
       id="experience"
       data-snap-section="true"
       className="snap-section relative flex h-full flex-col justify-center bg-[#121212] px-4 py-16 md:px-8"
-      onMouseLeave={closeExpandedCard}
-      onMouseMove={handleSectionMouseMove}
+      onMouseLeave={canHover ? closeExpandedCard : undefined}
+      onMouseMove={canHover ? handleSectionMouseMove : undefined}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_100%_0%,rgba(59,130,246,0.08),transparent)]" />
 
       <div
         className={`relative mx-auto w-full max-w-5xl ${
-          expandedIndex !== null ? "pointer-events-none" : ""
+          canHover && expandedIndex !== null ? "pointer-events-none" : ""
         }`}
       >
         <motion.div
@@ -236,8 +246,8 @@ export function Experience() {
                   ref={(el) => {
                     cardRefs.current[i] = el;
                   }}
-                  onMouseEnter={() => handleCardEnter(i)}
-                  onMouseLeave={clearHoverTimer}
+                  onMouseEnter={canHover ? () => handleCardEnter(i) : undefined}
+                  onMouseLeave={canHover ? clearHoverTimer : undefined}
                   style={{
                     boxShadow: `0 0 34px -20px ${job.glow}, 0 12px 36px -26px rgba(0,0,0,0.9)`,
                   }}
@@ -247,7 +257,7 @@ export function Experience() {
                       : "md:col-start-2 md:ml-10"
                   } ${expandedIndex === i ? "invisible" : ""}`}
                 >
-                  {renderCardContent(job, false)}
+                  {renderCardContent(job, !canHover)}
                 </article>
               </motion.li>
             ))}
@@ -256,7 +266,7 @@ export function Experience() {
       </div>
 
       <AnimatePresence>
-        {expandedRole && originRect && targetRect && (
+        {canHover && expandedRole && originRect && targetRect && (
           <>
             <motion.div
               className="pointer-events-none fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px]"
