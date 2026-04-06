@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: "Akash Bhaskar — Software Developer",
   description:
     "Backend software engineer building scalable APIs with Node.js, NestJS, and TypeScript.",
+  icons: {
+    icon: "/akash-profile.png",
+    shortcut: "/akash-profile.png",
+    apple: "/akash-profile.png",
+  },
 };
 
 export default function RootLayout({

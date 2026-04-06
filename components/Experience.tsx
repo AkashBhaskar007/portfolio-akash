@@ -57,6 +57,8 @@ const roles = [
 export function Experience() {
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
   const floatingCardRef = useRef<HTMLElement | null>(null);
+  const hoverTimerRef = useRef<number | null>(null);
+  const [canHover, setCanHover] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [originRect, setOriginRect] = useState<DOMRect | null>(null);
   const [targetRect, setTargetRect] = useState<{
@@ -65,23 +67,53 @@ export function Experience() {
     width: number;
   } | null>(null);
 
-  const handleCardEnter = (index: number) => {
+  const clearHoverTimer = () => {
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  };
+
+  const openCard = (index: number) => {
     const card = cardRefs.current[index];
     if (!card) return;
     const rect = card.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const popupWidth = Math.min(860, viewportWidth - 32);
     const centeredLeft = (viewportWidth - popupWidth) / 2;
-    const centeredTop = Math.max(16, (window.innerHeight - rect.height * 1.08) / 2);
+    const centeredTop = Math.max(
+      16,
+      (window.innerHeight - rect.height * 1.08) / 2,
+    );
     setOriginRect(rect);
     setTargetRect({ top: centeredTop, left: centeredLeft, width: popupWidth });
     setExpandedIndex(index);
   };
 
+  const handleCardEnter = (index: number) => {
+    if (!canHover) return;
+    clearHoverTimer();
+    hoverTimerRef.current = window.setTimeout(() => {
+      openCard(index);
+      hoverTimerRef.current = null;
+    }, 500);
+  };
+
   const closeExpandedCard = () => {
+    clearHoverTimer();
     setExpandedIndex(null);
     setTargetRect(null);
   };
+
+  useEffect(() => clearHoverTimer, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setCanHover(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     if (expandedIndex === null) return;
@@ -93,7 +125,9 @@ export function Experience() {
 
     window.addEventListener("wheel", handleScrollOrWheel, { passive: true });
     window.addEventListener("scroll", handleScrollOrWheel, { passive: true });
-    window.addEventListener("touchmove", handleScrollOrWheel, { passive: true });
+    window.addEventListener("touchmove", handleScrollOrWheel, {
+      passive: true,
+    });
     window.addEventListener("keydown", handleEscape);
 
     return () => {
@@ -115,11 +149,16 @@ export function Experience() {
     }
   };
 
-  const renderCardContent = (job: (typeof roles)[number], showDetails: boolean) => (
+  const renderCardContent = (
+    job: (typeof roles)[number],
+    showDetails: boolean,
+  ) => (
     <>
       <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
         <div>
-          <h3 className="text-xl font-semibold text-white md:text-2xl">{job.title}</h3>
+          <h3 className="text-xl font-semibold text-white md:text-2xl">
+            {job.title}
+          </h3>
           <p className="mt-1 text-white/80">{job.company}</p>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-white/45">
             <MapPin className="h-3.5 w-3.5" />
@@ -158,14 +197,14 @@ export function Experience() {
       id="experience"
       data-snap-section="true"
       className="snap-section relative flex h-full flex-col justify-center bg-[#121212] px-4 py-16 md:px-8"
-      onMouseLeave={closeExpandedCard}
-      onMouseMove={handleSectionMouseMove}
+      onMouseLeave={canHover ? closeExpandedCard : undefined}
+      onMouseMove={canHover ? handleSectionMouseMove : undefined}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_100%_0%,rgba(59,130,246,0.08),transparent)]" />
 
       <div
         className={`relative mx-auto w-full max-w-5xl ${
-          expandedIndex !== null ? "pointer-events-none" : ""
+          canHover && expandedIndex !== null ? "pointer-events-none" : ""
         }`}
       >
         <motion.div
@@ -207,7 +246,8 @@ export function Experience() {
                   ref={(el) => {
                     cardRefs.current[i] = el;
                   }}
-                  onMouseEnter={() => handleCardEnter(i)}
+                  onMouseEnter={canHover ? () => handleCardEnter(i) : undefined}
+                  onMouseLeave={canHover ? clearHoverTimer : undefined}
                   style={{
                     boxShadow: `0 0 34px -20px ${job.glow}, 0 12px 36px -26px rgba(0,0,0,0.9)`,
                   }}
@@ -215,11 +255,9 @@ export function Experience() {
                     i % 2 === 0
                       ? "md:col-start-1 md:mr-10"
                       : "md:col-start-2 md:ml-10"
-                  } ${
-                    expandedIndex === i ? "invisible" : ""
-                  }`}
+                  } ${expandedIndex === i ? "invisible" : ""}`}
                 >
-                  {renderCardContent(job, false)}
+                  {renderCardContent(job, !canHover)}
                 </article>
               </motion.li>
             ))}
@@ -228,7 +266,7 @@ export function Experience() {
       </div>
 
       <AnimatePresence>
-        {expandedRole && originRect && targetRect && (
+        {canHover && expandedRole && originRect && targetRect && (
           <>
             <motion.div
               className="pointer-events-none fixed inset-0 z-40 bg-black/45 backdrop-blur-[2px]"
