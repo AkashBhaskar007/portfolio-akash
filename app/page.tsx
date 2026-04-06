@@ -9,6 +9,7 @@ import { Skills } from "@/components/Skills";
 import { Experience } from "@/components/Experience";
 import { Projects } from "@/components/Projects";
 import { Education } from "@/components/Education";
+import { FloatingDoodles } from "@/components/FloatingDoodles";
 
 export default function Home() {
   const [windowLoaded, setWindowLoaded] = useState(false);
@@ -112,6 +113,7 @@ export default function Home() {
           transition: "opacity 0.35s ease",
         }}
       >
+        <FloatingDoodles />
         <Header />
         <main
           ref={mainRef}
