@@ -14,7 +14,11 @@ const nav = [
   { href: "#contact", label: "Contact" },
 ];
 
-export function Header() {
+type HeaderProps = {
+  activeSection?: string;
+};
+
+export function Header({ activeSection = "#home" }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -55,7 +59,11 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm text-white/55 transition hover:text-white"
+              className={`text-sm transition ${
+                activeSection === item.href
+                  ? "font-medium text-white"
+                  : "text-white/55 hover:text-white"
+              }`}
             >
               {item.label}
             </Link>
@@ -85,7 +93,11 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-lg px-3 py-2 text-sm text-white/70 hover:bg-white/5 hover:text-white"
+                  className={`rounded-lg px-3 py-2 text-sm transition ${
+                    activeSection === item.href
+                      ? "bg-white/10 text-white"
+                      : "text-white/70 hover:bg-white/5 hover:text-white"
+                  }`}
                   onClick={() => setOpen(false)}
                 >
                   {item.label}

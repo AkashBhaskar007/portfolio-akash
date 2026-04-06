@@ -57,6 +57,7 @@ const roles = [
 export function Experience() {
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
   const floatingCardRef = useRef<HTMLElement | null>(null);
+  const hoverTimerRef = useRef<number | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [originRect, setOriginRect] = useState<DOMRect | null>(null);
   const [targetRect, setTargetRect] = useState<{
@@ -65,23 +66,44 @@ export function Experience() {
     width: number;
   } | null>(null);
 
-  const handleCardEnter = (index: number) => {
+  const clearHoverTimer = () => {
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  };
+
+  const openCard = (index: number) => {
     const card = cardRefs.current[index];
     if (!card) return;
     const rect = card.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const popupWidth = Math.min(860, viewportWidth - 32);
     const centeredLeft = (viewportWidth - popupWidth) / 2;
-    const centeredTop = Math.max(16, (window.innerHeight - rect.height * 1.08) / 2);
+    const centeredTop = Math.max(
+      16,
+      (window.innerHeight - rect.height * 1.08) / 2,
+    );
     setOriginRect(rect);
     setTargetRect({ top: centeredTop, left: centeredLeft, width: popupWidth });
     setExpandedIndex(index);
   };
 
+  const handleCardEnter = (index: number) => {
+    clearHoverTimer();
+    hoverTimerRef.current = window.setTimeout(() => {
+      openCard(index);
+      hoverTimerRef.current = null;
+    }, 500);
+  };
+
   const closeExpandedCard = () => {
+    clearHoverTimer();
     setExpandedIndex(null);
     setTargetRect(null);
   };
+
+  useEffect(() => clearHoverTimer, []);
 
   useEffect(() => {
     if (expandedIndex === null) return;
@@ -93,7 +115,9 @@ export function Experience() {
 
     window.addEventListener("wheel", handleScrollOrWheel, { passive: true });
     window.addEventListener("scroll", handleScrollOrWheel, { passive: true });
-    window.addEventListener("touchmove", handleScrollOrWheel, { passive: true });
+    window.addEventListener("touchmove", handleScrollOrWheel, {
+      passive: true,
+    });
     window.addEventListener("keydown", handleEscape);
 
     return () => {
@@ -115,11 +139,16 @@ export function Experience() {
     }
   };
 
-  const renderCardContent = (job: (typeof roles)[number], showDetails: boolean) => (
+  const renderCardContent = (
+    job: (typeof roles)[number],
+    showDetails: boolean,
+  ) => (
     <>
       <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
         <div>
-          <h3 className="text-xl font-semibold text-white md:text-2xl">{job.title}</h3>
+          <h3 className="text-xl font-semibold text-white md:text-2xl">
+            {job.title}
+          </h3>
           <p className="mt-1 text-white/80">{job.company}</p>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-white/45">
             <MapPin className="h-3.5 w-3.5" />
@@ -208,6 +237,7 @@ export function Experience() {
                     cardRefs.current[i] = el;
                   }}
                   onMouseEnter={() => handleCardEnter(i)}
+                  onMouseLeave={clearHoverTimer}
                   style={{
                     boxShadow: `0 0 34px -20px ${job.glow}, 0 12px 36px -26px rgba(0,0,0,0.9)`,
                   }}
@@ -215,9 +245,7 @@ export function Experience() {
                     i % 2 === 0
                       ? "md:col-start-1 md:mr-10"
                       : "md:col-start-2 md:ml-10"
-                  } ${
-                    expandedIndex === i ? "invisible" : ""
-                  }`}
+                  } ${expandedIndex === i ? "invisible" : ""}`}
                 >
                   {renderCardContent(job, false)}
                 </article>

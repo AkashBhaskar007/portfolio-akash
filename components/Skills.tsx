@@ -138,6 +138,7 @@ const item = {
 export function Skills() {
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
   const floatingCardRef = useRef<HTMLElement | null>(null);
+  const hoverTimerRef = useRef<number | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [originRect, setOriginRect] = useState<DOMRect | null>(null);
   const [targetRect, setTargetRect] = useState<{
@@ -146,7 +147,14 @@ export function Skills() {
     width: number;
   } | null>(null);
 
-  const handleCardEnter = (index: number) => {
+  const clearHoverTimer = () => {
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  };
+
+  const openCard = (index: number) => {
     const card = cardRefs.current[index];
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -155,10 +163,21 @@ export function Skills() {
     setExpandedIndex(index);
   };
 
+  const handleCardEnter = (index: number) => {
+    clearHoverTimer();
+    hoverTimerRef.current = window.setTimeout(() => {
+      openCard(index);
+      hoverTimerRef.current = null;
+    }, 500);
+  };
+
   const closeExpandedCard = () => {
+    clearHoverTimer();
     setExpandedIndex(null);
     setTargetRect(null);
   };
+
+  useEffect(() => clearHoverTimer, []);
 
   useEffect(() => {
     if (expandedIndex === null) return;
@@ -170,7 +189,9 @@ export function Skills() {
 
     window.addEventListener("wheel", handleScrollOrWheel, { passive: true });
     window.addEventListener("scroll", handleScrollOrWheel, { passive: true });
-    window.addEventListener("touchmove", handleScrollOrWheel, { passive: true });
+    window.addEventListener("touchmove", handleScrollOrWheel, {
+      passive: true,
+    });
     window.addEventListener("keydown", handleEscape);
 
     return () => {
@@ -181,7 +202,8 @@ export function Skills() {
     };
   }, [expandedIndex]);
 
-  const expandedCategory = expandedIndex !== null ? categories[expandedIndex] : null;
+  const expandedCategory =
+    expandedIndex !== null ? categories[expandedIndex] : null;
 
   const handleSectionMouseMove = (event: React.MouseEvent<HTMLElement>) => {
     if (expandedIndex === null) return;
@@ -257,8 +279,8 @@ export function Skills() {
           Skills & tools
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-white/50">
-          Backend engineering with Node.js, NestJS, and TypeScript — scalable APIs,
-          data layers, and cloud-ready delivery.
+          Backend engineering with Node.js, NestJS, and TypeScript — scalable
+          APIs, data layers, and cloud-ready delivery.
         </p>
 
         <motion.div
@@ -276,6 +298,7 @@ export function Skills() {
                 cardRefs.current[i] = el;
               }}
               onMouseEnter={() => handleCardEnter(i)}
+              onMouseLeave={clearHoverTimer}
               style={{
                 boxShadow: `0 0 34px -20px ${cat.glow}, 0 12px 36px -26px rgba(0,0,0,0.9)`,
               }}

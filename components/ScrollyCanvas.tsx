@@ -33,6 +33,7 @@ export function ScrollyCanvas({ scrollTargetRef, onReady }: ScrollyCanvasProps) 
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const frameIndexRef = useRef(0);
+  const readyNotifiedRef = useRef(false);
   const [ready, setReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -89,12 +90,22 @@ export function ScrollyCanvas({ scrollTargetRef, onReady }: ScrollyCanvasProps) 
         if (cancelled) return;
         imagesRef.current = imgs;
         setReady(true);
-        onReady?.();
+        if (!readyNotifiedRef.current) {
+          readyNotifiedRef.current = true;
+          onReady?.();
+        }
         setLoadError(null);
         requestAnimationFrame(() => paint());
       })
       .catch((e: Error) => {
-        if (!cancelled) setLoadError(e.message);
+        if (cancelled) return;
+        // Keep the app usable even when sequence assets are missing.
+        setLoadError(e.message);
+        setReady(true);
+        if (!readyNotifiedRef.current) {
+          readyNotifiedRef.current = true;
+          onReady?.();
+        }
       });
 
     return () => {
@@ -137,9 +148,13 @@ export function ScrollyCanvas({ scrollTargetRef, onReady }: ScrollyCanvasProps) 
         </div>
       )}
       {loadError && (
-        <div className="absolute inset-0 z-[1] flex items-center justify-center px-6 text-center text-sm text-white/50">
-          Place frames in{" "}
-          <code className="mx-1 text-white/70">public/sequence</code> ({loadError})
+        <div className="absolute inset-0 z-[1] overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,rgba(99,102,241,0.18),transparent)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_45%_38%_at_75%_70%,rgba(236,72,153,0.14),transparent)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent_40%)]" />
+          <div className="absolute bottom-4 left-4 rounded-md border border-white/15 bg-black/30 px-2.5 py-1 text-[11px] text-white/60">
+            Sequence fallback active
+          </div>
         </div>
       )}
       <canvas
