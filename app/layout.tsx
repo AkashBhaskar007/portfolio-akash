@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   description:
     "Backend software engineer building scalable APIs with Node.js, NestJS, and TypeScript.",
   icons: {
-    icon: "/akash-profile.webp",
-    shortcut: "/akash-profile.webp",
+    icon: "/akash-profile-round.png",
+    shortcut: "/akash-profile-round.png",
     apple: "/akash-profile.webp",
   },
 };
