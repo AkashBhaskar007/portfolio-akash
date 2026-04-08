@@ -44,7 +44,7 @@ export function Header({ activeSection = "#home" }: HeaderProps) {
         >
           <span className="relative h-9 w-9 overflow-hidden rounded-full border border-white/20 transition group-hover:border-white/35">
             <Image
-              src="/akash-profile.png"
+              src="/akash-profile.webp"
               alt="Akash Bhaskar"
               fill
               sizes="36px"
