@@ -79,14 +79,35 @@ export function Experience() {
     if (!card) return;
     const rect = card.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
-    const popupWidth = Math.min(860, viewportWidth - 32);
-    const centeredLeft = (viewportWidth - popupWidth) / 2;
-    const centeredTop = Math.max(
-      16,
-      (window.innerHeight - rect.height * 1.08) / 2,
+    const viewportHeight = window.innerHeight;
+    const margin = 16;
+    const scale = 1.08;
+    const estimatedExpandedHeight = Math.max(360, rect.height * 1.75);
+    const scaledWidth = rect.width * scale;
+    const scaledHeight = estimatedExpandedHeight * scale;
+
+    const minLeft = margin + (scaledWidth - rect.width) / 2;
+    const maxLeft =
+      viewportWidth - margin - rect.width - (scaledWidth - rect.width) / 2;
+    const minTop = margin + (scaledHeight - estimatedExpandedHeight) / 2;
+    const maxTop =
+      viewportHeight -
+      margin -
+      estimatedExpandedHeight -
+      (scaledHeight - estimatedExpandedHeight) / 2;
+
+    const clampedLeft = Math.min(
+      Math.max(rect.left, minLeft),
+      Math.max(minLeft, maxLeft)
     );
+    const preferredTop = rect.top - 96;
+    const clampedTop = Math.min(
+      Math.max(preferredTop, minTop),
+      Math.max(minTop, maxTop)
+    );
+
     setOriginRect(rect);
-    setTargetRect({ top: centeredTop, left: centeredLeft, width: popupWidth });
+    setTargetRect({ top: clampedTop, left: clampedLeft, width: rect.width });
     setExpandedIndex(index);
   };
 
@@ -118,22 +139,32 @@ export function Experience() {
   useEffect(() => {
     if (expandedIndex === null) return;
 
-    const handleScrollOrWheel = () => closeExpandedCard();
+    const handleWheelOrTouch = (event: WheelEvent | TouchEvent) => {
+      const popup = floatingCardRef.current;
+      if (popup && event.target instanceof Node && popup.contains(event.target)) {
+        return;
+      }
+      closeExpandedCard();
+    };
+    const handleScroll = () => closeExpandedCard();
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") closeExpandedCard();
     };
+    const snapContainer = document.querySelector<HTMLElement>(".snap-container");
 
-    window.addEventListener("wheel", handleScrollOrWheel, { passive: true });
-    window.addEventListener("scroll", handleScrollOrWheel, { passive: true });
-    window.addEventListener("touchmove", handleScrollOrWheel, {
+    window.addEventListener("wheel", handleWheelOrTouch, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("touchmove", handleWheelOrTouch, {
       passive: true,
     });
+    snapContainer?.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      window.removeEventListener("wheel", handleScrollOrWheel);
-      window.removeEventListener("scroll", handleScrollOrWheel);
-      window.removeEventListener("touchmove", handleScrollOrWheel);
+      window.removeEventListener("wheel", handleWheelOrTouch);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("touchmove", handleWheelOrTouch);
+      snapContainer?.removeEventListener("scroll", handleScroll);
       window.removeEventListener("keydown", handleEscape);
     };
   }, [expandedIndex]);
@@ -156,16 +187,16 @@ export function Experience() {
     <>
       <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
         <div>
-          <h3 className="text-xl font-semibold text-white md:text-2xl">
+          <h3 className="text-lg font-semibold text-white md:text-xl">
             {job.title}
           </h3>
-          <p className="mt-1 text-white/80">{job.company}</p>
-          <p className="mt-2 flex items-center gap-1.5 text-sm text-white/45">
+          <p className="mt-1 text-sm text-white/80">{job.company}</p>
+          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-white/45 md:text-sm">
             <MapPin className="h-3.5 w-3.5" />
             {job.location} · {job.period}
           </p>
         </div>
-        <div className="mt-2 h-14 w-14 shrink-0 overflow-hidden md:mt-0 md:h-16 md:w-16">
+        <div className="mt-2 h-12 w-12 shrink-0 overflow-hidden md:mt-0 md:h-14 md:w-14">
           <Image
             src={job.logo}
             alt={`${job.company} logo`}
@@ -176,10 +207,10 @@ export function Experience() {
         </div>
       </div>
       <ul
-        className={`text-sm leading-relaxed text-white/60 md:text-base ${
+        className={`text-[11px] leading-relaxed text-white/60 md:text-xs ${
           showDetails
-            ? "mt-6 space-y-3 opacity-100"
-            : "mt-0 max-h-0 space-y-3 overflow-hidden opacity-0"
+            ? "mt-4 space-y-2.5 opacity-100"
+            : "mt-0 max-h-0 space-y-2.5 overflow-hidden opacity-0"
         }`}
       >
         {job.highlights.map((line) => (
@@ -222,7 +253,7 @@ export function Experience() {
         </motion.div>
 
         <div className="relative mt-16">
-          <div className="absolute left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-white/25 via-white/10 to-transparent md:left-1/2 md:-translate-x-1/2" />
+          <div className="absolute left-[11px] top-2 -bottom-8 w-px bg-gradient-to-b from-white/25 via-white/10 to-transparent md:left-1/2 md:-translate-x-1/2" />
 
           <ul className="space-y-12">
             {roles.map((job, i) => (
@@ -251,11 +282,13 @@ export function Experience() {
                   style={{
                     boxShadow: `0 0 34px -20px ${job.glow}, 0 12px 36px -26px rgba(0,0,0,0.9)`,
                   }}
-                  className={`group glass glass-hover rounded-2xl p-6 md:p-8 ${
+                  className={`group glass glass-hover rounded-2xl p-5 md:p-6 ${
                     i % 2 === 0
                       ? "md:col-start-1 md:mr-10"
                       : "md:col-start-2 md:ml-10"
-                  } ${expandedIndex === i ? "invisible" : ""}`}
+                  } ${i === 2 ? "md:-mt-8" : ""} ${
+                    expandedIndex === i ? "invisible" : ""
+                  }`}
                 >
                   {renderCardContent(job, !canHover)}
                 </article>
@@ -278,7 +311,7 @@ export function Experience() {
 
             <motion.article
               ref={floatingCardRef}
-              className="glass pointer-events-auto fixed z-50 rounded-xl border border-white/15 bg-white/[0.07] p-6 will-change-transform md:p-8"
+              className="glass pointer-events-auto fixed z-50 max-h-[calc(100vh-2rem)] overflow-y-auto rounded-xl border border-white/15 bg-white/[0.07] p-5 will-change-transform md:p-6"
               style={{
                 top: originRect.top,
                 left: originRect.left,
@@ -290,20 +323,20 @@ export function Experience() {
                 left: originRect.left,
                 width: originRect.width,
                 scale: 1,
+                opacity: 1,
               }}
               animate={{
                 top: targetRect.top,
                 left: targetRect.left,
                 width: targetRect.width,
                 scale: 1.08,
+                opacity: 1,
               }}
               exit={{
-                top: originRect.top,
-                left: originRect.left,
-                width: originRect.width,
-                scale: 1,
+                scale: 1.02,
+                opacity: 0,
               }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
               onMouseLeave={closeExpandedCard}
             >
               {renderCardContent(expandedRole, true)}
