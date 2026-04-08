@@ -35,7 +35,7 @@ export default function Home() {
     if (!container) return;
 
     const sections = Array.from(
-      container.querySelectorAll<HTMLElement>('[data-snap-section="true"]')
+      container.querySelectorAll<HTMLElement>('[data-snap-section="true"]'),
     );
     if (sections.length === 0) return;
 
@@ -50,7 +50,10 @@ export default function Home() {
         ? currentIndex
         : Math.min(
             sections.length - 1,
-            Math.max(0, Math.round(container.scrollTop / container.clientHeight))
+            Math.max(
+              0,
+              Math.round(container.scrollTop / container.clientHeight),
+            ),
           );
 
     const targetIndex =
@@ -93,16 +96,21 @@ export default function Home() {
     let ticking = false;
     const updateActiveSection = () => {
       const sections = Array.from(
-        container.querySelectorAll<HTMLElement>('[data-snap-section="true"]')
+        container.querySelectorAll<HTMLElement>('[data-snap-section="true"]'),
       );
       if (sections.length === 0) return;
 
       const containerTop = container.getBoundingClientRect().top;
-      const closest = sections.reduce((best, section) => {
-        const offset = Math.abs(section.getBoundingClientRect().top - containerTop);
-        if (!best || offset < best.offset) return { id: section.id, offset };
-        return best;
-      }, null as { id: string; offset: number } | null);
+      const closest = sections.reduce(
+        (best, section) => {
+          const offset = Math.abs(
+            section.getBoundingClientRect().top - containerTop,
+          );
+          if (!best || offset < best.offset) return { id: section.id, offset };
+          return best;
+        },
+        null as { id: string; offset: number } | null,
+      );
 
       if (closest?.id) {
         setActiveSection(`#${closest.id}`);
@@ -129,7 +137,7 @@ export default function Home() {
         <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center gap-5 bg-[#121212] px-4 text-center">
           <div className="preloader-avatar relative h-36 w-36 overflow-hidden rounded-full border border-white/20">
             <Image
-              src="/akash-profile.png"
+              src="/akash-profile.webp"
               alt="Akash Bhaskar"
               fill
               sizes="144px"
@@ -138,7 +146,9 @@ export default function Home() {
             />
           </div>
           <div>
-            <p className="text-lg font-semibold tracking-wide text-white">Akash Bhaskar</p>
+            <p className="text-lg font-semibold tracking-wide text-white">
+              Akash Bhaskar
+            </p>
             <p className="text-sm text-white/70">Software Developer</p>
           </div>
         </div>
