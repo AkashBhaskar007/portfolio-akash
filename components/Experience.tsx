@@ -150,18 +150,21 @@ export function Experience() {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") closeExpandedCard();
     };
+    const snapContainer = document.querySelector<HTMLElement>(".snap-container");
 
     window.addEventListener("wheel", handleWheelOrTouch, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("touchmove", handleWheelOrTouch, {
       passive: true,
     });
+    snapContainer?.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("keydown", handleEscape);
 
     return () => {
       window.removeEventListener("wheel", handleWheelOrTouch);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("touchmove", handleWheelOrTouch);
+      snapContainer?.removeEventListener("scroll", handleScroll);
       window.removeEventListener("keydown", handleEscape);
     };
   }, [expandedIndex]);
@@ -320,20 +323,20 @@ export function Experience() {
                 left: originRect.left,
                 width: originRect.width,
                 scale: 1,
+                opacity: 1,
               }}
               animate={{
                 top: targetRect.top,
                 left: targetRect.left,
                 width: targetRect.width,
                 scale: 1.08,
+                opacity: 1,
               }}
               exit={{
-                top: originRect.top,
-                left: originRect.left,
-                width: originRect.width,
-                scale: 1,
+                scale: 1.02,
+                opacity: 0,
               }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
               onMouseLeave={closeExpandedCard}
             >
               {renderCardContent(expandedRole, true)}
