@@ -5,6 +5,8 @@
 :root {
   --background: #121212;
   --foreground: #fafafa;
+  /* Scroll distance for hero canvas scrub (must exceed 100vh so scroll progress 0→1 has range). */
+  --hero-scrolly-track: 280vh;
 }
 
 html {
@@ -37,6 +39,13 @@ body {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow: hidden;
+}
+
+/* Taller hero + no overflow clip so sticky canvas works while scrolling the track. */
+.snap-section.snap-section--scrolly-hero {
+  height: auto;
+  min-height: var(--hero-scrolly-track);
+  overflow: visible;
 }
 
 .preloader-avatar::after {

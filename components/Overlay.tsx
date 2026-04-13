@@ -4,13 +4,16 @@ import { type RefObject } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 type OverlayProps = {
+  scrollContainerRef: RefObject<HTMLElement | null>;
   scrollTargetRef: RefObject<HTMLElement | null>;
 };
 
-export function Overlay({ scrollTargetRef }: OverlayProps) {
+export function Overlay({ scrollContainerRef, scrollTargetRef }: OverlayProps) {
   const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
     target: scrollTargetRef,
     offset: ["start start", "end end"],
+    layoutEffect: true,
   });
 
   const introOpacity = useTransform(
@@ -21,32 +24,8 @@ export function Overlay({ scrollTargetRef }: OverlayProps) {
   const introY = useTransform(scrollYProgress, [0, 0.34], [0, -48]);
   const introParallax = useTransform(scrollYProgress, [0, 1], [0, -120]);
 
-  const apisOpacity = useTransform(
-    scrollYProgress,
-    [0.22, 0.30, 0.42, 0.52],
-    [0, 1, 1, 0]
-  );
-  const apisY = useTransform(scrollYProgress, [0.22, 0.52], [40, -24]);
-  const apisParallax = useTransform(scrollYProgress, [0, 1], [0, -80]);
-
-  const scaleOpacity = useTransform(
-    scrollYProgress,
-    [0.48, 0.58, 0.72, 0.82],
-    [0, 1, 1, 0]
-  );
-  const scaleY = useTransform(scrollYProgress, [0.48, 0.82], [48, -32]);
-  const scaleParallax = useTransform(scrollYProgress, [0, 1], [0, -140]);
-
   const introCombinedY = useTransform(
     [introY, introParallax],
-    ([a, b]: number[]) => a + b
-  );
-  const apisCombinedY = useTransform(
-    [apisY, apisParallax],
-    ([a, b]: number[]) => a + b
-  );
-  const scaleCombinedY = useTransform(
-    [scaleY, scaleParallax],
     ([a, b]: number[]) => a + b
   );
 
@@ -71,31 +50,6 @@ export function Overlay({ scrollTargetRef }: OverlayProps) {
         <p className="mt-3 text-lg text-white/60 md:text-xl">Software Developer</p>
       </motion.div>
 
-      <motion.div
-        className="absolute left-6 top-[46%] max-w-md md:left-14 md:top-[48%] md:max-w-xl lg:left-20"
-        style={{
-          opacity: apisOpacity,
-          y: apisCombinedY,
-        }}
-      >
-        <p className="text-2xl font-medium leading-snug text-white md:text-4xl lg:text-5xl">
-          &ldquo;I build APIs.&rdquo;
-        </p>
-        <div className="mt-4 h-px w-24 bg-gradient-to-r from-white/40 to-transparent" />
-      </motion.div>
-
-      <motion.div
-        className="absolute right-6 top-[58%] max-w-md text-right md:right-14 md:top-[56%] md:max-w-xl lg:right-20"
-        style={{
-          opacity: scaleOpacity,
-          y: scaleCombinedY,
-        }}
-      >
-        <p className="text-2xl font-medium leading-snug text-white md:text-4xl lg:text-5xl">
-          Building scalable backend.
-        </p>
-        <div className="ml-auto mt-4 h-px w-24 bg-gradient-to-l from-white/40 to-transparent" />
-      </motion.div>
     </div>
   );
 }

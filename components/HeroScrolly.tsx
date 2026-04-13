@@ -1,22 +1,38 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type RefObject } from "react";
 import { ScrollyCanvas } from "@/components/ScrollyCanvas";
 import { Overlay } from "@/components/Overlay";
 
 type HeroScrollyProps = {
+  scrollContainerRef: RefObject<HTMLElement | null>;
   onSequenceReady?: () => void;
 };
 
-export function HeroScrolly({ onSequenceReady }: HeroScrollyProps) {
-  const scrollTargetRef = useRef<HTMLDivElement>(null);
+export function HeroScrolly({
+  scrollContainerRef,
+  onSequenceReady,
+}: HeroScrollyProps) {
+  const scrollTargetRef = useRef<HTMLElement>(null);
 
   return (
-    <section id="home" data-snap-section="true" className="snap-section relative bg-[#121212]">
-      <div ref={scrollTargetRef} className="relative h-full w-full overflow-hidden">
-        <div className="h-full w-full overflow-hidden">
-          <ScrollyCanvas scrollTargetRef={scrollTargetRef} onReady={onSequenceReady} />
-          <Overlay scrollTargetRef={scrollTargetRef} />
+    <section
+      ref={scrollTargetRef}
+      id="home"
+      data-snap-section="true"
+      className="snap-section snap-section--scrolly-hero relative bg-[#121212]"
+    >
+      <div className="sticky top-0 h-svh w-full overflow-hidden">
+        <div className="relative h-full w-full overflow-hidden">
+          <ScrollyCanvas
+            scrollContainerRef={scrollContainerRef}
+            scrollTargetRef={scrollTargetRef}
+            onReady={onSequenceReady}
+          />
+          <Overlay
+            scrollContainerRef={scrollContainerRef}
+            scrollTargetRef={scrollTargetRef}
+          />
         </div>
       </div>
     </section>

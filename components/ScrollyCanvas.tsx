@@ -10,6 +10,7 @@ import {
 } from "@/lib/sequenceConfig";
 
 type ScrollyCanvasProps = {
+  scrollContainerRef: RefObject<HTMLElement | null>;
   scrollTargetRef: RefObject<HTMLElement | null>;
   onReady?: () => void;
 };
@@ -28,7 +29,11 @@ function drawImageCover(
   ctx.drawImage(img, ox, oy, dw, dh);
 }
 
-export function ScrollyCanvas({ scrollTargetRef, onReady }: ScrollyCanvasProps) {
+export function ScrollyCanvas({
+  scrollContainerRef,
+  scrollTargetRef,
+  onReady,
+}: ScrollyCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
@@ -38,8 +43,10 @@ export function ScrollyCanvas({ scrollTargetRef, onReady }: ScrollyCanvasProps) 
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
     target: scrollTargetRef,
     offset: ["start start", "end end"],
+    layoutEffect: true,
   });
 
   const maxFrame = Math.max(0, SEQUENCE_FRAME_COUNT - 1);
