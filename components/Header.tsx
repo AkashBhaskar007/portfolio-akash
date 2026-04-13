@@ -6,12 +6,54 @@ import Link from "next/link";
 import Image from "next/image";
 
 const nav = [
-  { href: "#home", label: "Home" },
-  { href: "#skills", label: "Skills" },
-  { href: "#experience", label: "Experience" },
-  { href: "#projects", label: "Projects" },
-  { href: "#education", label: "Education" },
-  { href: "#contact", label: "Contact" },
+  {
+    href: "#home",
+    label: "Home",
+    activeTextClass: "text-sky-300",
+    activeGlowClass: "[text-shadow:0_0_14px_rgba(125,211,252,0.7)]",
+    activeMobileClass: "bg-sky-500/20 text-sky-200",
+    activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(56,189,248,0.9)]",
+  },
+  {
+    href: "#skills",
+    label: "Skills",
+    activeTextClass: "text-violet-300",
+    activeGlowClass: "[text-shadow:0_0_14px_rgba(196,181,253,0.75)]",
+    activeMobileClass: "bg-violet-500/20 text-violet-200",
+    activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(139,92,246,0.9)]",
+  },
+  {
+    href: "#experience",
+    label: "Experience",
+    activeTextClass: "text-emerald-300",
+    activeGlowClass: "[text-shadow:0_0_14px_rgba(110,231,183,0.75)]",
+    activeMobileClass: "bg-emerald-500/20 text-emerald-200",
+    activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(16,185,129,0.9)]",
+  },
+  {
+    href: "#projects",
+    label: "Projects",
+    activeTextClass: "text-amber-300",
+    activeGlowClass: "[text-shadow:0_0_14px_rgba(252,211,77,0.75)]",
+    activeMobileClass: "bg-amber-500/20 text-amber-200",
+    activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(245,158,11,0.9)]",
+  },
+  {
+    href: "#education",
+    label: "Education",
+    activeTextClass: "text-fuchsia-300",
+    activeGlowClass: "[text-shadow:0_0_14px_rgba(240,171,252,0.75)]",
+    activeMobileClass: "bg-fuchsia-500/20 text-fuchsia-200",
+    activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(217,70,239,0.9)]",
+  },
+  {
+    href: "#contact",
+    label: "Contact",
+    activeTextClass: "text-rose-300",
+    activeGlowClass: "[text-shadow:0_0_14px_rgba(253,164,175,0.75)]",
+    activeMobileClass: "bg-rose-500/20 text-rose-200",
+    activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(244,63,94,0.9)]",
+  },
 ];
 
 type HeaderProps = {
@@ -74,7 +116,7 @@ export function Header({ activeSection = "#home" }: HeaderProps) {
               href={item.href}
               className={`text-sm transition ${
                 activeSection === item.href
-                  ? "font-medium text-white"
+                  ? `font-semibold ${item.activeTextClass} ${item.activeGlowClass}`
                   : "text-white/55 hover:text-white"
               }`}
             >
@@ -108,7 +150,7 @@ export function Header({ activeSection = "#home" }: HeaderProps) {
                   href={item.href}
                   className={`rounded-lg px-3 py-2 text-sm transition ${
                     activeSection === item.href
-                      ? "bg-white/10 text-white"
+                      ? `${item.activeMobileClass} ${item.activeMobileGlowClass} font-medium`
                       : "text-white/70 hover:bg-white/5 hover:text-white"
                   }`}
                   onClick={() => setOpen(false)}

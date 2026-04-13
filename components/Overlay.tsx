@@ -33,8 +33,8 @@ export function Overlay({ scrollProgress }: OverlayProps) {
         }}
       >
         <motion.h1
-          className="text-4xl font-semibold tracking-tight text-white md:text-6xl lg:text-7xl"
-          style={{ textShadow: "0 0 80px rgba(255,255,255,0.12)" }}
+          className="text-4xl font-semibold tracking-tight text-sky-200 md:text-6xl lg:text-7xl"
+          style={{ textShadow: "0 0 80px rgba(56,189,248,0.28)" }}
         >
           Akash Bhaskar
         </motion.h1>

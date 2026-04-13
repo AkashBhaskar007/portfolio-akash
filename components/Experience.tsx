@@ -244,10 +244,10 @@ export function Experience() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-white/40">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300/80 [text-shadow:0_0_10px_rgba(110,231,183,0.55)]">
             Career
           </p>
-          <h2 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight text-emerald-300 [text-shadow:0_0_18px_rgba(110,231,183,0.6)] md:text-5xl">
             Experience
           </h2>
         </motion.div>

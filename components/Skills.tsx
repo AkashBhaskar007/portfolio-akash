@@ -289,10 +289,10 @@ export function Skills() {
           canHover && expandedIndex !== null ? "pointer-events-none" : ""
         }`}
       >
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-white/40">
+        <p className="text-sm font-medium uppercase tracking-[0.2em] text-violet-300/80 [text-shadow:0_0_10px_rgba(196,181,253,0.55)]">
           Stack
         </p>
-        <h2 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+        <h2 className="mt-3 text-4xl font-semibold tracking-tight text-violet-300 [text-shadow:0_0_18px_rgba(196,181,253,0.6)] md:text-5xl">
           Skills & tools
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-white/50">

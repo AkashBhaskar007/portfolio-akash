@@ -21,7 +21,12 @@ export function Footer() {
     >
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 md:flex-row">
         <div className="text-center md:text-left">
-          <p className="text-sm font-medium text-white">Akash Bhaskar</p>
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-rose-300/80 [text-shadow:0_0_10px_rgba(253,164,175,0.55)]">
+            Contact
+          </p>
+          <p className="mt-2 text-sm font-medium text-rose-200 [text-shadow:0_0_16px_rgba(253,164,175,0.6)]">
+            Akash Bhaskar
+          </p>
           <p className="mt-1 text-sm text-white/45">
             Trivandrum, Kerala · i.am.akashbhaskar@gmail.com
           </p>
