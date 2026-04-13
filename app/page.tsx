@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -16,7 +16,6 @@ export default function Home() {
   const [sequenceReady, setSequenceReady] = useState(false);
   const [activeSection, setActiveSection] = useState("#home");
   const mainRef = useRef<HTMLElement>(null);
-  const wheelLockRef = useRef(false);
 
   useEffect(() => {
     const onLoad = () => setWindowLoaded(true);
@@ -29,65 +28,6 @@ export default function Home() {
   }, []);
 
   const appReady = windowLoaded && sequenceReady;
-
-  const snapToAdjacentSection = useCallback((direction: "next" | "prev") => {
-    const container = mainRef.current;
-    if (!container) return;
-
-    const sections = Array.from(
-      container.querySelectorAll<HTMLElement>('[data-snap-section="true"]'),
-    );
-    if (sections.length === 0) return;
-
-    const containerTop = container.getBoundingClientRect().top;
-    const currentIndex = sections.findIndex((section) => {
-      const top = section.getBoundingClientRect().top - containerTop;
-      return Math.abs(top) < 2;
-    });
-
-    const fallbackIndex =
-      currentIndex >= 0
-        ? currentIndex
-        : Math.min(
-            sections.length - 1,
-            Math.max(
-              0,
-              Math.round(container.scrollTop / container.clientHeight),
-            ),
-          );
-
-    const targetIndex =
-      direction === "next"
-        ? Math.min(fallbackIndex + 1, sections.length - 1)
-        : Math.max(fallbackIndex - 1, 0);
-
-    const target = sections[targetIndex];
-    if (!target || target === sections[fallbackIndex]) return;
-
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
-
-  useEffect(() => {
-    const container = mainRef.current;
-    if (!container) return;
-
-    const onWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaY) < 8) return;
-      event.preventDefault();
-
-      if (wheelLockRef.current) return;
-      wheelLockRef.current = true;
-
-      snapToAdjacentSection(event.deltaY > 0 ? "next" : "prev");
-
-      window.setTimeout(() => {
-        wheelLockRef.current = false;
-      }, 700);
-    };
-
-    container.addEventListener("wheel", onWheel, { passive: false });
-    return () => container.removeEventListener("wheel", onWheel);
-  }, [snapToAdjacentSection]);
 
   useEffect(() => {
     const container = mainRef.current;
@@ -168,7 +108,10 @@ export default function Home() {
           className="snap-container bg-[#121212]"
           aria-label="Full page sections"
         >
-          <HeroScrolly onSequenceReady={() => setSequenceReady(true)} />
+          <HeroScrolly
+            scrollContainerRef={mainRef}
+            onSequenceReady={() => setSequenceReady(true)}
+          />
           <Skills />
           <Experience />
           <Projects />
