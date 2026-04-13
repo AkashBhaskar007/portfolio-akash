@@ -13,7 +13,7 @@ const config: Config = {
         muted: "#a3a3a3",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       keyframes: {
         "portfolio-shimmer": {
