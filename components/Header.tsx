@@ -21,6 +21,13 @@ type HeaderProps = {
 export function Header({ activeSection = "#home" }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const showProfileIcon = [
+    "#skills",
+    "#experience",
+    "#projects",
+    "#education",
+    "#contact",
+  ].includes(activeSection);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -40,7 +47,13 @@ export function Header({ activeSection = "#home" }: HeaderProps) {
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:h-16 md:px-8">
         <Link
           href="#home"
-          className="group flex items-center gap-2 rounded-full text-sm font-medium tracking-tight text-white/90 transition hover:text-white"
+          className={`group flex items-center gap-2 rounded-full text-sm font-medium tracking-tight text-white/90 transition hover:text-white ${
+            showProfileIcon
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
+          }`}
+          aria-hidden={!showProfileIcon}
+          tabIndex={!showProfileIcon ? -1 : 0}
         >
           <span className="relative h-9 w-9 overflow-hidden rounded-full border border-white/20 transition group-hover:border-white/35">
             <Image

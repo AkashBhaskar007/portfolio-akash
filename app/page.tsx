@@ -40,21 +40,13 @@ export default function Home() {
       );
       if (sections.length === 0) return;
 
-      const containerTop = container.getBoundingClientRect().top;
-      const closest = sections.reduce(
-        (best, section) => {
-          const offset = Math.abs(
-            section.getBoundingClientRect().top - containerTop,
-          );
-          if (!best || offset < best.offset) return { id: section.id, offset };
-          return best;
-        },
-        null as { id: string; offset: number } | null,
-      );
+      // Pick the last section we've actually scrolled into.
+      // This prevents long sections (hero track) from switching nav too early.
+      const scrollTop = container.scrollTop;
+      const passed = sections.filter((section) => section.offsetTop <= scrollTop + 2);
+      const current = passed[passed.length - 1] ?? sections[0];
 
-      if (closest?.id) {
-        setActiveSection(`#${closest.id}`);
-      }
+      if (current?.id) setActiveSection(`#${current.id}`);
     };
 
     const onScroll = () => {
