@@ -140,6 +140,7 @@ export function Skills() {
   const floatingCardRef = useRef<HTMLElement | null>(null);
   const hoverTimerRef = useRef<number | null>(null);
   const [canHover, setCanHover] = useState(true);
+  const [mobileExpandedIndex, setMobileExpandedIndex] = useState<number | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [originRect, setOriginRect] = useState<DOMRect | null>(null);
   const [targetRect, setTargetRect] = useState<{
@@ -188,6 +189,12 @@ export function Skills() {
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
   }, []);
+
+  useEffect(() => {
+    if (canHover) {
+      setMobileExpandedIndex(null);
+    }
+  }, [canHover]);
 
   useEffect(() => {
     if (expandedIndex === null) return;
@@ -309,6 +316,28 @@ export function Skills() {
               }}
               onMouseEnter={canHover ? () => handleCardEnter(i) : undefined}
               onMouseLeave={canHover ? clearHoverTimer : undefined}
+              onClick={
+                !canHover
+                  ? () =>
+                      setMobileExpandedIndex((current) =>
+                        current === i ? null : i,
+                      )
+                  : undefined
+              }
+              onKeyDown={
+                !canHover
+                  ? (event) => {
+                      if (event.key !== "Enter" && event.key !== " ") return;
+                      event.preventDefault();
+                      setMobileExpandedIndex((current) =>
+                        current === i ? null : i,
+                      );
+                    }
+                  : undefined
+              }
+              role={!canHover ? "button" : undefined}
+              tabIndex={!canHover ? 0 : undefined}
+              aria-expanded={!canHover ? mobileExpandedIndex === i : undefined}
               style={{
                 boxShadow: `0 0 34px -20px ${cat.glow}, 0 12px 36px -26px rgba(0,0,0,0.9)`,
               }}
@@ -316,7 +345,7 @@ export function Skills() {
                 expandedIndex === i ? "invisible" : ""
               }`}
             >
-              {renderCardContent(cat, !canHover)}
+              {renderCardContent(cat, canHover ? false : mobileExpandedIndex === i)}
             </motion.div>
           ))}
         </motion.div>
