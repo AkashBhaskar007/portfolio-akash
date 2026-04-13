@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, type RefObject } from "react";
-import { useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { type MotionValue, useTransform, useMotionValueEvent } from "framer-motion";
 import { preloadImages, buildSequenceUrls } from "@/lib/preloadImages";
 import {
   SEQUENCE_BASE_PATH,
@@ -10,8 +10,7 @@ import {
 } from "@/lib/sequenceConfig";
 
 type ScrollyCanvasProps = {
-  scrollContainerRef: RefObject<HTMLElement | null>;
-  scrollTargetRef: RefObject<HTMLElement | null>;
+  scrollProgress: MotionValue<number>;
   onReady?: () => void;
 };
 
@@ -30,8 +29,7 @@ function drawImageCover(
 }
 
 export function ScrollyCanvas({
-  scrollContainerRef,
-  scrollTargetRef,
+  scrollProgress,
   onReady,
 }: ScrollyCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -42,15 +40,8 @@ export function ScrollyCanvas({
   const [ready, setReady] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const { scrollYProgress } = useScroll({
-    container: scrollContainerRef,
-    target: scrollTargetRef,
-    offset: ["start start", "end end"],
-    layoutEffect: true,
-  });
-
   const maxFrame = Math.max(0, SEQUENCE_FRAME_COUNT - 1);
-  const frameMotion = useTransform(scrollYProgress, [0, 1], [0, maxFrame]);
+  const frameMotion = useTransform(scrollProgress, [0, 1], [0, maxFrame]);
 
   const paint = useCallback(() => {
     const canvas = canvasRef.current;

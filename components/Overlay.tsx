@@ -1,28 +1,19 @@
 "use client";
 
-import { type RefObject } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, type MotionValue, useTransform } from "framer-motion";
 
 type OverlayProps = {
-  scrollContainerRef: RefObject<HTMLElement | null>;
-  scrollTargetRef: RefObject<HTMLElement | null>;
+  scrollProgress: MotionValue<number>;
 };
 
-export function Overlay({ scrollContainerRef, scrollTargetRef }: OverlayProps) {
-  const { scrollYProgress } = useScroll({
-    container: scrollContainerRef,
-    target: scrollTargetRef,
-    offset: ["start start", "end end"],
-    layoutEffect: true,
-  });
-
+export function Overlay({ scrollProgress }: OverlayProps) {
   const introOpacity = useTransform(
-    scrollYProgress,
+    scrollProgress,
     [0, 0.18, 0.28, 0.34],
     [1, 1, 0.4, 0]
   );
-  const introY = useTransform(scrollYProgress, [0, 0.34], [0, -48]);
-  const introParallax = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const introY = useTransform(scrollProgress, [0, 0.34], [0, -48]);
+  const introParallax = useTransform(scrollProgress, [0, 1], [0, -120]);
 
   const introCombinedY = useTransform(
     [introY, introParallax],
