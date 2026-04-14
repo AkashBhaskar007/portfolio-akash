@@ -31,14 +31,6 @@ const nav = [
     activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(16,185,129,0.9)]",
   },
   {
-    href: "#projects",
-    label: "Projects",
-    activeTextClass: "text-amber-300",
-    activeGlowClass: "[text-shadow:0_0_14px_rgba(252,211,77,0.75)]",
-    activeMobileClass: "bg-amber-500/20 text-amber-200",
-    activeMobileGlowClass: "shadow-[0_0_22px_-8px_rgba(245,158,11,0.9)]",
-  },
-  {
     href: "#education",
     label: "Education",
     activeTextClass: "text-fuchsia-300",
@@ -66,7 +58,6 @@ export function Header({ activeSection = "#home" }: HeaderProps) {
   const showProfileIcon = [
     "#skills",
     "#experience",
-    "#projects",
     "#education",
     "#contact",
   ].includes(activeSection);

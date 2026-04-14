@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { HeroScrolly } from "@/components/HeroScrolly";
 import { Skills } from "@/components/Skills";
 import { Experience } from "@/components/Experience";
-import { Projects } from "@/components/Projects";
 import { Education } from "@/components/Education";
 import { FloatingDoodles } from "@/components/FloatingDoodles";
 
@@ -106,7 +105,6 @@ export default function Home() {
           />
           <Skills />
           <Experience />
-          <Projects />
           <Education />
           <Footer />
         </main>
