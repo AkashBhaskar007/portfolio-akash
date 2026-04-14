@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { Download } from "lucide-react";
 
 const nav = [
   {
@@ -114,6 +115,16 @@ export function Header({ activeSection = "#home" }: HeaderProps) {
               {item.label}
             </Link>
           ))}
+          <a
+            href="/AkashBhaskar_Resume.pdf"
+            download="AkashBhaskar_Resume.pdf"
+            className="inline-flex items-center gap-2 rounded-full border border-rose-300/40 bg-rose-400/10 px-3 py-1.5 text-sm font-medium text-rose-200 transition duration-300 hover:-translate-y-0.5 hover:border-rose-200/70 hover:bg-rose-400/20 hover:text-rose-100 hover:shadow-[0_0_28px_-8px_rgba(251,113,133,0.9)]"
+            aria-label="Download resume PDF"
+            title="Download resume"
+          >
+            <Download className="h-4 w-4 motion-safe:animate-bounce" />
+            <span>Resume</span>
+          </a>
         </nav>
 
         <button
@@ -149,6 +160,17 @@ export function Header({ activeSection = "#home" }: HeaderProps) {
                   {item.label}
                 </Link>
               ))}
+              <a
+                href="/AkashBhaskar_Resume.pdf"
+                download="AkashBhaskar_Resume.pdf"
+                className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg border border-rose-300/40 bg-rose-400/10 px-3 py-2 text-sm font-medium text-rose-200 transition duration-300 hover:border-rose-200/70 hover:bg-rose-400/20 hover:text-rose-100 hover:shadow-[0_0_28px_-10px_rgba(251,113,133,0.85)]"
+                onClick={() => setOpen(false)}
+                aria-label="Download resume PDF"
+                title="Download resume"
+              >
+                <Download className="h-4 w-4 motion-safe:animate-bounce" />
+                <span>Resume</span>
+              </a>
             </div>
           </motion.nav>
         )}
